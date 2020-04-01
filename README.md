@@ -6,5 +6,5 @@ Reads are aligned to hg19_human_trxo_and_cor.fasta which is included in the pane
 
 Additionally, it will also mask low (< user specified minimum coverage in the plugin interface) and no coverage positions. When calculating depth, it will take the mapping quality which can also be set in the plugin interface into account. 
 
-Note Ion Ampliseq SARS-CoV-2 Reasearch Panel just covers the genomic region: 42-29842, so it will delete extra bases on the two ends ([1,41], [length-60,length]) in the final contig.
+Note Ion Ampliseq SARS-CoV-2 Reasearch Panel just covers the genomic region: 43-29842, so it will delete extra bases on the two ends ([1,42], [length-60,length]) in the final contig.
 

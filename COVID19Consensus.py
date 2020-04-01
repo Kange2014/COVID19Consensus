@@ -200,10 +200,10 @@ class COVID19Consensus(IonPlugin):
                                         "-bed", barcode_name + ".lowDepth.bed"
                                             ], cwd=results_dir)
             
-            # Note the panel covers 42-29842 (1-29903), so delete extra bases on the two ends ([1,41], [length-60,length])
+            # Note the panel covers 43-29842 (1-29903), so delete extra bases on the two ends ([1,42], [length-60,length])
             consen_seq = SeqIO.read(results_dir + "/variantCall2/TSVC_variants.consensus.masked.fasta","fasta")
             length = len(consen_seq.seq)
-            slice_seq = str(consen_seq.seq)[41:(length-61)]
+            slice_seq = str(consen_seq.seq)[42:(length-61)]
             consen_seq.seq = Seq(slice_seq)
             consen_seq.id = barcode_name + "-consensus"
             consensus_output = os.path.join(results_dir, barcode_name + "-consensus.fasta")

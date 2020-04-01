@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_parent"/>
+<link rel="stylesheet" media="all" href="/site_media/resources/bootstrap/css/bootstrap.min.css">
+<link href="/site_media/resources/kendo/styles/kendo.common.min.css" rel="stylesheet">
+<link href="/site_media/resources/less/kendo.tb.min.css" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="/site_media/resources/styles/tb-styles.min.css">
+
+<style type="text/css">
+p, ul{font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;}
+.zebra {  background-color: #E1EFFA;}
+.table_hover{    color: #009;    background-color: #6DBCEE;}
+</style>
+
+{% if autorefresh %}
+<META HTTP-EQUIV="refresh" CONTENT="15">
+{% endif %}
+
+<style type="text/css">
+  .help {cursor:help; border-bottom: 1px dotted #A9A9A9}
+</style>
+
+</head>
+<body>
+
+<title>COVID19Consensus Report</title>
+
+<style>
+body {font-family: Arial;}
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+</style>
+
+<h1><center>COVID19Consensus Assembly Report</center></h1>
+
+<div class="container-fluid">
+
+
+<h3> Assembly Results </h3>
+<div class="k-widget k-grid">
+  <table class="table-striped">
+    <thead class="k-grid-header">
+      <tr>
+      <th class="k-header"> <span class="help" title="Barcode name">Barcode Name</span></th>
+      <th class="k-header"> <span class="help" title="Sample name">Sample Name</span></th>
+      <th class="k-header"> <span class="help" title="COVID19Consensus assembled contig and link to fasta">COVID19Consensus Assembled Contig (FASTA)</span></th>
+    </tr>
+    </thead>
+    {% for assembly in assemblyData %}
+       <tr>
+	      <td>{{assembly.barcode}}</td>
+		  <td>{{assembly.sample}}</td>
+          <td style="text-align:left">
+            <span title="{{assembly.assembly}}"><a href="{{assembly.assembly}}">Assembly Contig</a></span>
+          </td>
+         
+        </tr>
+    {% endfor %}
+  </table>
+</div>
+
+
+<div class="spacer clear"></div>
+<div class="spacer clear"></div>
+
+{% if autorefresh %}
+<br/><h3 style="text-align:center;color:red">*** Analysis is not complete ***</h3>
+<a href="javascript:document.location.reload();" ONMOUSEOVER="window.status='Refresh'; return true">
+<div style="text-align:center">Click here to refresh</div></a>
+{% endif %}
+
+</div>
+
+<br/>
+<div class="footer" style="width:100%"> <div class="container"> <div class="row"> <div class="span12">
+  <img class="pull-left" src="/site_media/resources/img/ion-logo2.png" border="0">
+  <div class="pull-right">
+    <p>This is for research use only. It is not intended for any animal or human therapeutic or diagnostic use.</p>
+    <p><span class="copyright">&copy; 2020 Thermo Fisher Scientific Inc. All Rights Reserved.</span>
+
+    <a href="/licenses/terms-of-use.txt">Terms &amp; Conditions</a></p>
+  </div>
+</div> </div> </div> </div>
+<br/>
+
+</body> 
+</html>

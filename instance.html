@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE HTML>
+<html>
+<head>
+ <script type="text/javascript" src="/site_media/jquery/js/jquery-1.6.1.min.js"></script>
+
+ <style type="text/css">
+  #formwrap {
+   line-height: 2em;
+   background: #eef;
+   margin: 10px;
+   padding: 10px;
+   height: 500px;
+  }
+  body {
+   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+   font-size: 14px;
+  }
+  .center { margin-left:auto; margin-right:auto; }
+  .help {cursor:help; border-bottom: 1px dotted #A9A9A9}
+ </style>
+
+ <script>
+  $(function() {
+
+    $.fn.serializeObject = function() {
+     var o = {};
+     var a = this.serializeArray();
+     $.each( a, function() {
+       if( o[this.name] != null ) {
+         if( !o[this.name].push ) {
+           o[this.name] = [o[this.name]];
+         }
+         o[this.name].push(this.value || '');
+       } else {
+         o[this.name] = this.value || '';
+       }
+      });
+      return o;
+    };
+
+    var reportUrl = '/rundb/api/v1/results/'+TB_result+'/?format=json&noplugin=True';
+    var pluginUrl = '/rundb/api/v1/plugin/'+TB_plugin.pk+'/?format=json';
+    var analysisUrl;
+    $.ajaxSetup({async: false});
+    $.get( reportUrl, function(data) {
+      analysisUrl = data.reportLink;
+    });
+    // get config.html defaults from API - not sure this is still valid with new plan?
+    $.get( reportUrl, function(data) {
+      $.each( data.config, function(key,val) {
+        try { $("#"+key).val(val); }
+        catch(e) {}
+      });
+    });
+
+    // get plan libtype
+    var reportUrl = '/rundb/api/v1/results/'+TB_result+'/?format=json&noplugin=True';
+    var easUrl;
+    var analysisUrl;
+    $.ajaxSetup({async: false});
+    $.get( reportUrl, function(data) {
+     analysisUrl = data.reportLink;
+     easUrl = data.eas;
+     experimentUrl = data.experiment;
+     referenceID = data.reference;
+    });
+    var planLibType = "";
+    if( experimentUrl != undefined && experimentUrl != null && experimentUrl != "" ) {
+      var planUrl;
+      $.get( experimentUrl+"?format=json", function(data) { planUrl = data.plan; } );
+      if( planUrl != undefined && planUrl != null && planUrl != "" ) {
+        $.get( planUrl+"?format=json", function(data) { planLibType = data.runType; });
+      }
+    }
+	
+	$(function()
+    {
+    $('#postbutton').click(function() {
+      obj = $('#pluginconfig').serializeObject();
+	  obj.barcodetable = parent.TB_plugin_functions.get_plugin_barcodetable();
+      pluginAPIJSON = { "plugin" : [TB_plugin.fields.name], "pluginconfig" : obj };
+      pluginAPIJSON = JSON.stringify(pluginAPIJSON);
+      pluginURL = "/rundb/api/v1/results/" + TB_result + "/plugin/";
+      $.ajax({
+        type: 'POST',
+        url: pluginURL,
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        success: function(data) {
+          $("#json_result").html('<div style="text-align: center;"><img src="/site_media/jquery/colorbox/images/loading.gif" alt="Running Plugin" style="float:center"></img><p>Running the Plugin... Check the Plugin Summary</p></div>');
+          setTimeout("parent.$.fn.colorbox.close()",2000);
+        },
+        data: pluginAPIJSON,
+        dataType: "json"
+      });
+    });
+    });
+ 
+   });
+ </script>
+</head>
+
+<!--build the html page for what the user sees-->
+<body>
+ <form id="pluginconfig" name="pluginconfig">
+   <div align="center" id="json_result">
+    <input id="postbutton" type="submit" value="Submit">
+   </div>
+  
+	<div style="text-align:center">
+    <h2>Torrent COVID19Consensus Plugin</h2>
+    </div>
+	
+	
+	<table class="center" cellpadding="5px">
+	  
+      <tr>
+        <td><span class="help" title="Select chip used in this experiment">Chip Type:</span></td>
+         <td align=left>
+         <select name="chip" id="chip">
+		    <option value="510">510</option>
+			<option value="520">520</option>
+			<option value="530" selected="selected">530</option>
+			<option value="540">540</option>
+			<option value="550">550</option>
+		    <option value="Proton P1">Proton P1</option>
+			<option value="PGM">PGM</option>
+         </select>
+        </td>
+      </tr>
+	  
+	  <tr>
+        <td><span class="help" title="Specify the minimum mapping quality (MAPQ) that a read must have to be included in the analysis">Minimum Mapping Quality:</span></td>
+        <td ><input name="mapQ" id="mapQ" value="20"></td>
+      </tr>
+	  
+	  <tr>
+        <td><span class="help" title="Specify the minimum depth that a target base must have to be included in the analysis">Minimum Depth:</span></td>
+        <td ><input name="minCov" id="minCov" value="10"></td>
+      </tr>
+	  
+	</table>
+	<div>
+     <h4>About Torrent COVID19Consensus Plugin</h4>
+     <p>This plugin builds a consensus sequence of the virus present in the sample through two rounds of mapping and variant calling 
+		(only detecting mutations with allele frequency >= 51%), and masks low and no coverage positions.</p>
+    </div>
+
+ </form>
+</body>
+</html>
